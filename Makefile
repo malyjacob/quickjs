@@ -298,8 +298,16 @@ else
 LTOEXT=
 endif
 
+ifdef CONFIG_FOR_BINDING
+QJS_LIB_PIC_OBJS=$(OBJDIR)/quickjs.pic.o $(OBJDIR)/libregexp.pic.o $(OBJDIR)/libunicode.pic.o $(OBJDIR)/cutils.pic.o $(OBJDIR)/quickjs-libc.pic.o $(OBJDIR)/libbf.pic.o
+libquickjs$(LTOEXT).a: $(QJS_LIB_PIC_OBJS)
+	$(AR) rcs $@ $^
+else
 libquickjs$(LTOEXT).a: $(QJS_LIB_OBJS)
 	$(AR) rcs $@ $^
+endif
+
+libbuild: libquickjs$(LTOEXT).a
 
 ifdef CONFIG_LTO
 libquickjs.a: $(patsubst %.o, %.nolto.o, $(QJS_LIB_OBJS))
