@@ -53,6 +53,7 @@ PREFIX?=/usr/local
 
 # include the code for BigFloat/BigDecimal and math mode
 CONFIG_BIGNUM=y
+CONFIG_FOR_BINDING=y
 
 OBJDIR=.obj
 
@@ -125,11 +126,11 @@ else
   CC=$(CROSS_PREFIX)gcc
   CFLAGS+=-g -Wall -MMD -MF $(OBJDIR)/$(@F).d
   CFLAGS += -Wno-array-bounds -Wno-format-truncation
-  ifdef CONFIG_LTO
+#   ifdef CONFIG_LTO
     AR=$(CROSS_PREFIX)gcc-ar
-  else
-    AR=$(CROSS_PREFIX)ar
-  endif
+#   else
+#     AR=$(CROSS_PREFIX)ar
+#   endif
 endif
 STRIP?=$(CROSS_PREFIX)strip
 CFLAGS+=-fwrapv # ensure that signed overflows behave as expected
@@ -235,10 +236,11 @@ ifdef CONFIG_BIGNUM
 QJS_OBJS+=$(OBJDIR)/qjscalc.o
 endif
 
-HOST_LIBS=-lm -ldl -lpthread
+HOST_LIBS=-lm -lpthread
 LIBS=-lm
 ifndef CONFIG_WIN32
 LIBS+=-ldl -lpthread
+HOST_LIBS+=-ldl
 endif
 LIBS+=$(EXTRA_LIBS)
 
